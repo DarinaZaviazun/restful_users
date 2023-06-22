@@ -15,6 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile
     init: true
+    command: sh -c "mvn clean install -Dmaven.test.skip=false  -pl . && cd restful_users && java -jar /usr/src/app/target/*.jar"
     environment:
       - MONGODB_URL=mongodb://mongodb:27017/test_task
     ports:
