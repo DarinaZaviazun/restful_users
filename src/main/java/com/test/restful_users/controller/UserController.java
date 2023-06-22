@@ -43,7 +43,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateUser(@PathVariable("id") String id, @RequestBody User user) {
         if (userService.updateUserById(id, user)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

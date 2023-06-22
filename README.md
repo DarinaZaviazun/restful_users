@@ -15,7 +15,7 @@ To run the project:
 To stop the project
 1) run in the terminal '**docker-compose -f "docker-compose.yml" down**'
 
-To test an app you can use Postman, you can find a Postman collection with all required requests in the folder.
+To test an app you can use Postman, you can find a Postman collection with all required requests in the base folder.
 
 Creating this app, I sticked to such clean code principles:
 - keep everything simple (KISS principle)

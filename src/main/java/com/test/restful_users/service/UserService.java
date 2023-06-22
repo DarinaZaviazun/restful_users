@@ -1,37 +1,43 @@
 package com.test.restful_users.service;
 
 import com.test.restful_users.model.User;
-import com.test.restful_users.repository.UserRepository;
+import com.test.restful_users.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserService{
 
-    private UserRepository userRepository;
+    private IUserRepository IUserRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(IUserRepository IUserRepository) {
+        this.IUserRepository = IUserRepository;
     }
 
     public String saveUser(User user) {
-        User savedUser = userRepository.save(user);
+        User savedUser = IUserRepository.save(user);
         return savedUser.getId();
     }
 
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return IUserRepository.findAll();
     }
 
     public Optional<User> getUserById(String id) {
-        return userRepository.findById(id);
+        if (isIdIncorrect(id)) {
+            return Optional.empty();
+        }
+        return IUserRepository.findById(id);
     }
 
     public boolean deleteUserById(String id) {
-        if (userRepository.findById(id).isPresent()) {
-            userRepository.deleteById(id);
+        if (isIdIncorrect(id)) {
+            return false;
+        }
+        if (IUserRepository.findById(id).isPresent()) {
+            IUserRepository.deleteById(id);
             return true;
         } else {
             return false;
@@ -39,7 +45,11 @@ public class UserService {
     }
 
     public boolean updateUserById(String id, User user) {
-        Optional<User> foundUserInDB = userRepository.findById(id);
+        if (isIdIncorrect(id)) {
+            return false;
+        }
+
+        Optional<User> foundUserInDB = IUserRepository.findById(id);
         if (foundUserInDB.isPresent()) {
             User foundUser = foundUserInDB.get();
             if (user.getId() != null)
@@ -48,10 +58,14 @@ public class UserService {
                 foundUser.setName(user.getName());
             if (user.getEmail() != null)
                 foundUser.setEmail(user.getEmail());
-            userRepository.save(foundUser);
+            IUserRepository.save(foundUser);
             return true;
         } else {
             return false;
         }
+    }
+
+    private boolean isIdIncorrect(String id) {
+        return id == null || id.isBlank() || id.isEmpty();
     }
 }
